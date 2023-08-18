@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  pg_db:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_DB=information_db
+      - POSTGRES_USER=mcharliev
+      - POSTGRES_PASSWORD=353062
+    volumes:
+      - db:/var/lib/postgresql/data postgres
+    ports:
+      - "5411:5432"
+
+volumes:
+  db:
