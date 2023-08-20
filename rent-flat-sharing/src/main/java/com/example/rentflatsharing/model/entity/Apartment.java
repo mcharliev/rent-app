@@ -17,19 +17,19 @@ public class Apartment {
     @Column(name = "id")
     private Long id;
 
-    @NotNull
+
     @Column(name = "count_rooms",nullable = false)
     private String countRooms;
 
-    @NotNull
+
     @Column(name = "price",nullable = false)
     private String price;
 
-    @NotNull
+
     @Column(name = "full_rating",nullable = false)
     private String fullRating;
 
-    @NotNull
+
     @Column(name = "time_reg_lot",nullable = false)
     private LocalDateTime localDateTime;
 

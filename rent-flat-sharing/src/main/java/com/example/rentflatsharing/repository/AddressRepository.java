@@ -19,5 +19,4 @@ public interface AddressRepository extends JpaRepository<Address, Long> {
     @Query(value = "SELECT a FROM Address a where a.city = :city ")
     List<Address> getAllFlatsByCity(String city);
 
-
 }
