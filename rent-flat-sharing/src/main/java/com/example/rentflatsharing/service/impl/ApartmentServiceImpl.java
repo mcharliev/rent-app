@@ -47,6 +47,8 @@ public class ApartmentServiceImpl implements ApartmentService {
         currentApartment.setPrice(apartmentDto.getPrice());
         currentApartment.setFullRating(apartmentDto.getFullRating());
         currentApartment.setCountRooms(String.valueOf(apartmentDto.getCountRooms()));
+        currentApartment.setLocalDateTime(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
+        apartmentRepository.save(currentApartment);
         return apartmentMapper.apartmentEntityToApartmentDto(currentApartment);
     }
 

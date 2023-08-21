@@ -25,7 +25,7 @@ public class ApartmentController {
 
     @PatchMapping("/{apId}")
     public ResponseEntity<ApartmentDto> editApartment(@PathVariable("apId") Long apId,
-                                                      @RequestPart ApartmentDto apartmentDto) {
+                                                      @RequestBody ApartmentDto apartmentDto) {
         return ResponseEntity.ok(apartmentService.editApartment(apId, apartmentDto));
     }
 

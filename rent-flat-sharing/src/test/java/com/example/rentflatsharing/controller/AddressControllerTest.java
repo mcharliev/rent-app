@@ -24,8 +24,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
-@SpringBootTest()
+
 @AutoConfigureMockMvc
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class AddressControllerTest {
 
     @Autowired
@@ -57,7 +58,7 @@ class AddressControllerTest {
     @WithMockUser(username = "admin", roles = {"USER", "ADMIN"})
     @Test
     public void addAddressInBdTest() throws Exception {
-        Address address = createTestAddress(7L, "Pobeda", "5", "Moscow");
+        Address address = createTestAddress(6L, "Pobeda", "5", "Moscow");
         repository.save(address);
         mvc.perform(post("/address")
                         .content(objectMapper.writeValueAsBytes(address))
@@ -66,11 +67,6 @@ class AddressControllerTest {
 
         List<Address> found = repository.findAll();
         assertThat(found).extracting(Address::getCity).contains("Moscow");
-    }
-
-
-    @Test
-    void deleteAddress() {
     }
 
     @WithMockUser(username = "admin", roles = {"USER", "ADMIN"})

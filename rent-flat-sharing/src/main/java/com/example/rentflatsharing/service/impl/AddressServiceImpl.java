@@ -26,6 +26,7 @@ public class AddressServiceImpl implements AddressService {
         currentAddress.setCity(addressDto.getCity());
         currentAddress.setStreet(addressDto.getStreet());
         currentAddress.setHouseNumber(addressDto.getHouseNumber());
+        addressRepository.save(currentAddress);
         return addressMapper.addressEntityToAddressDto(currentAddress);
     }
 
