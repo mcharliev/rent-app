@@ -2,9 +2,10 @@ package com.example.rentinfo.model.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
-
+@ToString
 @Entity
 @Data
 @Table(name = "info_data")

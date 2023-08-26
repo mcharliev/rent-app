@@ -1,5 +1,6 @@
 package com.example.rentinfo.service;
 
+import com.example.rentinfo.kafka.JsonKafkaProducer;
 import com.example.rentinfo.model.entity.Information;
 import com.example.rentinfo.exception.InformationDataException;
 import com.example.rentinfo.model.dto.InformationDto;
@@ -14,14 +15,14 @@ import java.util.Base64;
 public class InformationService {
 
     private final InformationRepository informationDataRepository;
+    private final JsonKafkaProducer kafkaProducer;
 
-    public InformationDto prepareInfo() {
+    public void prepareInfo() {
         Information informationData = informationDataRepository.findById(1L)
                 .orElseThrow(InformationDataException::new);
-        InformationDto dto = new InformationDto();
-        dto.setPathApi(base64Decoder(informationData.getPathApi()));
-        dto.setApiKey(base64Decoder(informationData.getApiKey()));
-        return dto;
+        informationData.setPathApi(base64Decoder(informationData.getPathApi()));
+        informationData.setApiKey(base64Decoder(informationData.getApiKey()));
+        kafkaProducer.sendMessage(informationData);
     }
 
     public String base64Decoder(String string) {

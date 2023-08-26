@@ -3,6 +3,7 @@ package com.example.rentinfo.controller;
 import com.example.rentinfo.model.dto.InformationDto;
 import com.example.rentinfo.service.InformationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,7 +13,8 @@ public class InformationController {
     private final InformationService informationService;
 
     @GetMapping("api-key")
-    public InformationDto getApiKey(){
-        return informationService.prepareInfo();
+    public ResponseEntity<String> getApiKey(){
+        informationService.prepareInfo();
+        return ResponseEntity.ok("Json message sent to kafka topic");
     }
 }

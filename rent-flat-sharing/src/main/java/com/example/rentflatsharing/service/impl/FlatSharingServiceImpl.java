@@ -11,6 +11,8 @@ import com.example.rentflatsharing.model.dto.ResultDto;
 import com.example.rentflatsharing.model.entity.Apartment;
 import com.example.rentflatsharing.model.mapper.ApartmentMapper;
 import com.example.rentflatsharing.service.FlatSharingService;
+import com.example.rentinfo.kafka.JsonKafkaProducer;
+import com.example.rentinfo.model.entity.Information;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -31,11 +33,14 @@ import static com.example.rentflatsharing.constants.ConstantProject.INFO_SERVICE
 public class FlatSharingServiceImpl implements FlatSharingService {
     private final ApartmentMapper apartmentMapper;
     private final ApartmentServiceImpl apartmentService;
+    private final JsonKafkaConsumer kafkaConsumer;
+    private final KafkaProducer kafkaProducer;
     private final WeatherServiceImp weatherServiceImp;
     private final Logger log = LoggerFactory.getLogger(FlatSharingServiceImpl.class);
 
     @Override
     public ApartmentResponseDto getApartments(String latitude, String longitude) {
+        kafkaProducer.sendMessage("geoCodeApi");
         String fullInfoByPoint = getFullInfoByPoint(latitude, longitude);
         log.info("getFullInfoByPoint <- geocode-service");
         String city = getParseResultToObject(fullInfoByPoint);
@@ -46,7 +51,7 @@ public class FlatSharingServiceImpl implements FlatSharingService {
     }
 
     private String getFullInfoByPoint(String latitude, String longitude) {
-        InfoData geocodeServiceApi = getGeocodeServiceApi();
+        Information geocodeServiceApi = kafkaConsumer.getInfoMap().get("geoCodeApi");
         log.info("getFullInfoByPoint -> geocode-service");
         RestTemplate restTemplate = new RestTemplate();
         return restTemplate.exchange(String.format(geocodeServiceApi.getPathApi(), latitude,
@@ -57,14 +62,14 @@ public class FlatSharingServiceImpl implements FlatSharingService {
                 .getBody();
     }
 
-    private InfoData getGeocodeServiceApi() {
-        RestTemplate restTemplate = new RestTemplate();
-        return restTemplate.exchange(INFO_SERVICE_URL,
-                        HttpMethod.GET,
-                        new HttpEntity<>(HttpHeaders.EMPTY),
-                        InfoData.class)
-                .getBody();
-    }
+//    private InfoData getGeocodeServiceApi() {
+//        RestTemplate restTemplate = new RestTemplate();
+//        return restTemplate.exchange(INFO_SERVICE_URL,
+//                        HttpMethod.GET,
+//                        new HttpEntity<>(HttpHeaders.EMPTY),
+//                        InfoData.class)
+//                .getBody();
+//    }
     
     private String getParseResultToObject(String fullInfo) {
         ObjectMapper objectMapper = new ObjectMapper();
